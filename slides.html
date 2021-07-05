@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>sfnetworks: Tidy Geospatial Networks in R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lucas van der Meer, Lorena Abad, Andrea Gilardi, Robin Lovelace" />
+    <meta name="date" content="2021-07-06" />
+    <script src="libs/header-attrs-2.9/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <code>sfnetworks</code>: Tidy Geospatial Networks in R
+## useR! 2021
+### <em>Lucas van der Meer</em>, Lorena Abad, Andrea Gilardi, Robin Lovelace
+### 2021-07-06
+
+---
+
+class: center, middle, hide-logo
+
+
+
+
+
+
+&lt;STYLE type='text/css' scoped&gt;
+PRE.fansi SPAN {padding-top: .25em; padding-bottom: .25em};
+&lt;/STYLE&gt;
+
+
+### First things first...
+
+You can find the slides for this presentation here: https://sfnetworks.github.io/useR2021/slides
+ 
+...
+
+and the source code on this GitHub repository: https://github.com/sfnetworks/useR2021
+
+---
+class: center, middle, hide-logo
+
+## What are geospatial networks?
+
+.pull-left[
+Road networks
+![](figs/road_network.png)
+]
+
+.pull-right[
+River networks
+![](figs/river_network.png)
+]
+---
+class: center, middle, hide-logo
+
+## The offer in R:
+
+--
+
+.pull-left[
+### Spatial analysis
+
+[\#rspatial](https://twitter.com/search?q=%23rspatial)
+
+`sf`
+
+`stars`
+
+`rgeos`
+
+`rgdal`
+
+`tmap`
+
+`ggmap`
+
+`mapview`
+
+...
+]
+
+.pull-right[
+### Network analysis
+
+[statnet](http://statnet.org/)
+
+`igraph`
+
+`tidygraph`
+
+`qgraph`
+
+`ggraph`
+
+`visNetwork`
+
+`networkD3`
+
+...
+]
+
+---
+class: center, middle, hide-logo
+
+# And for geospatial network analysis?
+
+--
+
+[dodgr](https://atfutures.github.io/dodgr/) 
+
+[cppRouting](https://github.com/vlarmet/cppRouting)
+
+[shp2graph](https://r-forge.r-project.org/projects/shp2graph)
+
+[spnetwork](https://github.com/edzer/spnetwork)
+
+[stplanr](https://docs.ropensci.org/stplanr/)
+
+...
+
+---
+class: center, middle, hide-logo
+## Our idea
+
+--
+.pull-left[
+![](https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif)
+]
+
+--
+
+.pull-right[
+![:scale 38%](https://raw.githubusercontent.com/thomasp85/tidygraph/master/man/figures/logo.png)
+]
+--
+.center[
+![:scale 20%](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/master/man/figures/logo.png)
+]
+
+---
+class: middle, hide-logo
+
+.pull-left-70[
+.center[
+![:scale 80%](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/tidyverse_celestial.png)
+]
+.footnote[
+Art from [@allison_horst](https://twitter.com/allison_horst)
+]
+]
+
+.pull-right-30[
+### *Tidy* data
+
+1. A column for each variable.
+2. A row for each observation.
+3. A data frame for each observational unit.
+
+.footnote[
+Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1 - 23. doi:http://dx.doi.org/10.18637/jss.v059.i10
+]
+
+&lt;br&gt;
+
+- Implemented in the *tidyverse* packages
+
+- Allows piping syntax `%&gt;%` 
+
+]
+
+---
+class: center, middle, hide-logo
+
+.pull-left-70[
+![](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/sf.png)
+.footnote[
+Artwork by [@allison_horst](https://twitter.com/allison_horst)
+]
+]
+
+.pull-right-30[
+
+### ** `sf` package**
+
+Simple features in R
+
+Spatial vector data (points, lines, polygons)
+
+Compatible with *tidy* workflows
+
+S3 classes
+]
+---
+class: center, middle, hide-logo
+
+.pull-left-70[
+![:scale 80%](https://www.r-graph-gallery.com/314-custom-circle-packing-with-several-levels_files/figure-html/thecode3c-1.png)
+.footnote[
+Figure from [R Graph Gallery](https://www.r-graph-gallery.com/314-custom-circle-packing-with-several-levels.html)
+]
+]
+
+.pull-right-30[
+
+### ** `tidygraph` package**
+
+![:scale 10%](https://avatars3.githubusercontent.com/u/3735184?s=200&amp;v=4)
+ Interface to [`igraph`](https://igraph.org/r/)  
+ 
+![:scale 8%](https://github.com/tidyverse/dplyr/raw/master/man/figures/logo.png)
+Supports [`dplyr`](https://dplyr.tidyverse.org/) verbs 
+
+![:scale 8%](https://raw.githubusercontent.com/thomasp85/tidygraph/master/man/figures/logo.png)
+ Introduces new specific *verbs* for graph structures (e.g. `morph`, `bind_graphs`, `graph_join`)
+
+![:scale 8%](https://github.com/thomasp85/ggraph/raw/master/man/figures/logo.png)
+ Allows visualization through [`ggraph`](https://ggraph.data-imaginist.com/)
+]
+---
+class: center, middle
+# And `sfnetworks`?
+
+### The core:
+
+&gt; A data structure that can be provided as input to both graph analytical functions of tidygraph and to spatial analytical functions of sf, without the need for conversion. 
+
+--
+
+&lt;br&gt;
+
+&gt; On top of that, it contains a set of spatial network specific functions that can be used alongside the offer of the two ‘parent packages’.
+
+---
+class: middle
+## Installation
+
+Install from CRAN:
+
+
+```r
+install.packages("sfnetworks")
+```
+
+Install the development version from GitHub:
+
+
+```r
+remotes::install_github("luukvdmeer/sfnetworks")
+```
+
+---
+class: middle
+## Data structure: `sfnetwork` class
+
+### Construction
+  
+Nodes: `sf` object with `POINT` geometries
+
+Edges: *to* and *from* columns along with edge `LINESTRING` geometries.
+
+Same coordinate system!
+  
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+*library(sf)
+*library(sfnetworks)
+
+*p1 = st_point(c(7, 51))
+*p2 = st_point(c(7, 52))
+*p3 = st_point(c(8, 52))
+
+*st_sfc(
+* p1, p2, p3,
+* crs = 4326
+*) %&gt;% st_sf()
+```
+]
+ 
+.panel2-toyexample-user[
+
+```
+Simple feature collection with 3 features and 0 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52
+Geodetic CRS:  WGS 84
+      geometry
+1 POINT (7 51)
+2 POINT (7 52)
+3 POINT (8 52)
+```
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+* nodes
+```
+]
+ 
+.panel2-toyexample-user[
+
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  nodes
+
+*st_sfc(
+* st_cast(st_union(p1,p2), "LINESTRING"),
+* st_cast(st_union(p1,p3), "LINESTRING"),
+* st_cast(st_union(p2,p3), "LINESTRING"),
+* crs = 4326
+*) %&gt;% st_sf()
+```
+]
+ 
+.panel2-toyexample-user[
+
+```
+Simple feature collection with 3 features and 0 fields
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52
+Geodetic CRS:  WGS 84
+                 geometry
+1 LINESTRING (7 51, 7 52)
+2 LINESTRING (7 51, 8 52)
+3 LINESTRING (7 52, 8 52)
+```
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  nodes
+
+st_sfc(
+  st_cast(st_union(p1,p2), "LINESTRING"),
+  st_cast(st_union(p1,p3), "LINESTRING"),
+  st_cast(st_union(p2,p3), "LINESTRING"),
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+* edges
+```
+]
+ 
+.panel2-toyexample-user[
+
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  nodes
+
+st_sfc(
+  st_cast(st_union(p1,p2), "LINESTRING"),
+  st_cast(st_union(p1,p3), "LINESTRING"),
+  st_cast(st_union(p2,p3), "LINESTRING"),
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  edges
+
+*edges$from = c(1, 1, 2)
+*edges$to = c(2, 3, 3)
+```
+]
+ 
+.panel2-toyexample-user[
+
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  nodes
+
+st_sfc(
+  st_cast(st_union(p1,p2), "LINESTRING"),
+  st_cast(st_union(p1,p3), "LINESTRING"),
+  st_cast(st_union(p2,p3), "LINESTRING"),
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  edges
+
+edges$from = c(1, 1, 2)
+edges$to = c(2, 3, 3)
+
+*sfnetwork(nodes, edges, directed = FALSE)
+```
+]
+ 
+.panel2-toyexample-user[
+
+```
+Checking if spatial network structure is valid...
+```
+
+```
+Spatial network structure is valid
+```
+
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;3&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;3&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# An undirected simple graph with 1 component with spatially explicit edges
+#
+# Node Data:     3 x 1 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52&lt;/span&gt;
+     geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;      (7 51)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;      (7 52)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;      (8 52)
+&lt;span style='color: #555555;'&gt;#
+# Edge Data:     3 x 3&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52&lt;/span&gt;
+   from    to         geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2     (7 51, 7 52)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     1     3     (7 51, 8 52)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     2     3     (7 52, 8 52)
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  nodes
+
+st_sfc(
+  st_cast(st_union(p1,p2), "LINESTRING"),
+  st_cast(st_union(p1,p3), "LINESTRING"),
+  st_cast(st_union(p2,p3), "LINESTRING"),
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  edges
+
+edges$from = c(1, 1, 2)
+edges$to = c(2, 3, 3)
+
+sfnetwork(nodes, edges, directed = FALSE) -&gt;
+* net
+```
+]
+ 
+.panel2-toyexample-user[
+
+```
+Checking if spatial network structure is valid...
+```
+
+```
+Spatial network structure is valid
+```
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample-user[
+
+```r
+library(sf)
+library(sfnetworks)
+
+p1 = st_point(c(7, 51))
+p2 = st_point(c(7, 52))
+p3 = st_point(c(8, 52))
+
+st_sfc(
+  p1, p2, p3,
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  nodes
+
+st_sfc(
+  st_cast(st_union(p1,p2), "LINESTRING"),
+  st_cast(st_union(p1,p3), "LINESTRING"),
+  st_cast(st_union(p2,p3), "LINESTRING"),
+  crs = 4326
+) %&gt;% st_sf() -&gt;
+  edges
+
+edges$from = c(1, 1, 2)
+edges$to = c(2, 3, 3)
+
+sfnetwork(nodes, edges, directed = FALSE) -&gt;
+  net
+
+*class(net)
+```
+]
+ 
+.panel2-toyexample-user[
+
+```
+Checking if spatial network structure is valid...
+```
+
+```
+Spatial network structure is valid
+```
+
+```
+[1] "sfnetwork" "tbl_graph" "igraph"   
+```
+]
+
+&lt;style&gt;
+.panel1-toyexample-user {
+  color: black;
+  width: 36.1052631578947%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-toyexample-user {
+  color: black;
+  width: 61.8947368421053%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-toyexample-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: middle
+## Data structure: `sfnetwork` class
+
+### Conversion
+  
+Using `as_sfnetwork()` objects of the following classes can be converted:
+- `sf` with `POINT` or `LINESTRING` geometry
+- `tbl_graph` from `tidygraph`
+- `psp` or `linnet` from `spatstat`
+- `sfNetwork` from `stplanr`
+
+--
+
+External files can be read in via: 
+- `sf::st_read()`
+- `igraph::read_graph() %&gt;% as_tbl_graph()` 
+
+---
+class: center, middle
+
+### What can we do?
+
+#### Network pre-processing and cleaning
+
+---
+class: middle
+
+
+
+### Network pre-processing and cleaning
+
+#### Initial network
+
+&lt;img src="slides_files/figure-html/clean2-1.png" width="864" /&gt;
+
+.note[
+Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
+]
+
+---
+class: middle
+### Network pre-processing and cleaning
+
+#### Simplifying edges
+
+&lt;img src="slides_files/figure-html/clean3-1.png" width="864" /&gt;
+
+
+
+.note[
+Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
+]
+
+---
+class: middle
+### Network pre-processing and cleaning
+
+#### Subdividing edges
+
+&lt;img src="slides_files/figure-html/clean4-1.png" width="864" /&gt;
+
+
+
+.note[
+Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
+]
+
+---
+class: middle
+### Network pre-processing and cleaning
+
+#### Removing pseudo-nodes
+
+&lt;img src="slides_files/figure-html/clean5-1.png" width="864" /&gt;
+
+
+
+.note[
+Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
+]
+
+---
+class: middle
+### Network pre-processing and cleaning
+
+#### Simplifying intersections
+
+
+
+&lt;img src="slides_files/figure-html/clean6-1.png" width="864" /&gt;
+
+
+
+.note[
+Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
+]
+
+---
+class: center, middle
+
+### What can we do?
+
+#### Spatial joins and filters
+
+---
+class: middle
+
+count: false
+### Spatial joins and filters 
+ #### Using st_filter()
+&lt;img src="slides_files/figure-html/stfilter_user_01_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Using st_filter()
+&lt;img src="slides_files/figure-html/stfilter_user_02_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Using st_filter()
+&lt;img src="slides_files/figure-html/stfilter_user_03_output-1.png" width="864" /&gt;
+
+&lt;style&gt;
+.panel1-stfilter-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-stfilter-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-stfilter-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: middle
+
+count: false
+### Spatial joins and filters 
+ #### Snapping points to their nearest node before joining
+&lt;img src="slides_files/figure-html/snap_user_01_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Snapping points to their nearest node before joining
+&lt;img src="slides_files/figure-html/snap_user_02_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Snapping points to their nearest node before joining
+&lt;img src="slides_files/figure-html/snap_user_03_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Snapping points to their nearest node before joining
+&lt;img src="slides_files/figure-html/snap_user_04_output-1.png" width="864" /&gt;
+
+&lt;style&gt;
+.panel1-snap-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-snap-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-snap-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: middle
+
+count: false
+### Spatial joins and filters 
+ #### Blending points into a network
+&lt;img src="slides_files/figure-html/blend_user_01_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Blending points into a network
+&lt;img src="slides_files/figure-html/blend_user_02_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial joins and filters 
+ #### Blending points into a network
+&lt;img src="slides_files/figure-html/blend_user_03_output-1.png" width="864" /&gt;
+
+&lt;style&gt;
+.panel1-blend-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-blend-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-blend-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: center, middle
+
+### What can we do?
+
+#### Routing
+
+---
+class: top
+
+count: false
+ 
+### Routing 
+ #### Setting edge weights
+.panel1-weights-user[
+
+```r
+*as_sfnetwork(
+* roxel,
+* directed = FALSE
+* )
+```
+]
+ 
+.panel2-weights-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# An undirected multigraph with 14 components with spatially explicit edges
+#
+# Node Data:     701 x 1 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522622 ymin: 51.94151 xmax: 7.546705 ymax:
+#   51.9612&lt;/span&gt;
+             geometry
+          &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (7.533722 51.95556)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (7.533461 51.95576)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (7.532442 51.95422)
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt;  (7.53209 51.95328)
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt; (7.532709 51.95209)
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt; (7.532869 51.95257)
+&lt;span style='color: #555555;'&gt;# ... with 695 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Edge Data:     851 x 5&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax:
+#   51.9612&lt;/span&gt;
+   from    to name        type                                geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbecke~ reside~ (7.533722 51.95556, 7.533461 51.955~
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersall~ second~ (7.532442 51.95422, 7.53236 51.9537~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-Be~ reside~ (7.532709 51.95209, 7.532823 51.952~
+&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Routing 
+ #### Setting edge weights
+.panel1-weights-user[
+
+```r
+as_sfnetwork(
+  roxel,
+  directed = FALSE
+  ) %&gt;%
+* st_transform(3035)
+```
+]
+ 
+.panel2-weights-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# An undirected multigraph with 14 components with spatially explicit edges
+#
+# Node Data:     701 x 1 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+           geometry
+        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt; (4151370 3207673)
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt; (4151408 3207539)
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt; (4151421 3207592)
+&lt;span style='color: #555555;'&gt;# ... with 695 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Edge Data:     851 x 5&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+   from    to name         type                               geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                      &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbecker~ reside~  (4151491 3207923, 4151474 3207946)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersallee second~ (4151398 3207777, 4151390 3207727,~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-Ber~ reside~ (4151408 3207539, 4151417 3207573,~
+&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Routing 
+ #### Setting edge weights
+.panel1-weights-user[
+
+```r
+as_sfnetwork(
+  roxel,
+  directed = FALSE
+  ) %&gt;%
+  st_transform(3035) %&gt;%
+* activate("edges")
+```
+]
+ 
+.panel2-weights-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# An undirected multigraph with 14 components with spatially explicit edges
+#
+# Edge Data:     851 x 5 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+   from    to name       type                                 geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;      &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbeck~ reside~    (4151491 3207923, 4151474 3207946)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersal~ second~ (4151398 3207777, 4151390 3207727, 4~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-B~ reside~ (4151408 3207539, 4151417 3207573, 4~
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt;     7     8 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;         path    (4151885 3206698, 4151861 3206711, 4~
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt;     9    10 Welsinghe~ reside~    (4151732 3207017, 4151721 3206809)
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt;    11    12 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;         footway (4152152 3206984, 4152143 3206932, 4~
+&lt;span style='color: #555555;'&gt;# ... with 845 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Node Data:     701 x 1&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+           geometry
+        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
+&lt;span style='color: #555555;'&gt;# ... with 698 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Routing 
+ #### Setting edge weights
+.panel1-weights-user[
+
+```r
+as_sfnetwork(
+  roxel,
+  directed = FALSE
+  ) %&gt;%
+  st_transform(3035) %&gt;%
+  activate("edges") %&gt;%
+* mutate(weight = edge_length())
+```
+]
+ 
+.panel2-weights-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# An undirected multigraph with 14 components with spatially explicit edges
+#
+# Edge Data:     851 x 6 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+   from    to name     type                          geometry   weight
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;    &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                 &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;      &lt;span style='color: #555555;'&gt;[m]&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbe~ resid~ (4151491 3207923, 4151474 3207~  28.859~
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pieners~ secon~ (4151398 3207777, 4151390 3207~ 107.714~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte~ resid~ (4151408 3207539, 4151417 3207~  54.367~
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt;     7     8 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;       path   (4151885 3206698, 4151861 3206~ 155.223~
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt;     9    10 Welsing~ resid~ (4151732 3207017, 4151721 3206~ 208.682~
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt;    11    12 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;       footw~ (4152152 3206984, 4152143 3206~  63.028~
+&lt;span style='color: #555555;'&gt;# ... with 845 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Node Data:     701 x 1&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+           geometry
+        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
+&lt;span style='color: #555555;'&gt;# ... with 698 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Routing 
+ #### Setting edge weights
+.panel1-weights-user[
+
+```r
+as_sfnetwork(
+  roxel,
+  directed = FALSE
+  ) %&gt;%
+  st_transform(3035) %&gt;%
+  activate("edges") %&gt;%
+  mutate(weight = edge_length()) -&gt;
+* net
+```
+]
+ 
+.panel2-weights-user[
+
+]
+
+&lt;style&gt;
+.panel1-weights-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-weights-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-weights-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+.note[
+Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
+]
+
+---
+class: top
+
+count: false
+ 
+### Routing 
+ #### Calculating shortest paths
+.panel1-shortpath-user[
+
+```r
+*paths = st_network_paths(
+* net,
+* from = 495,
+* to = c(458, 121)
+*) 
+*paths
+```
+]
+ 
+.panel2-shortpath-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tibble: 2 x 2&lt;/span&gt;
+  node_paths edge_paths
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;     &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;    
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [29]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [28]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [33]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [32]&amp;gt;&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Routing 
+ #### Calculating shortest paths
+.panel1-shortpath-user[
+
+```r
+paths = st_network_paths(
+  net,
+  from = 495,
+  to = c(458, 121)
+)
+paths
+
+*paths %&gt;%
+* slice(1) %&gt;%
+* pull(node_paths) %&gt;%
+* unlist()
+```
+]
+ 
+.panel2-shortpath-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tibble: 2 x 2&lt;/span&gt;
+  node_paths edge_paths
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;     &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;    
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [29]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [28]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [33]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [32]&amp;gt;&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+
+```
+ [1] 495 485 244 402 166  18 195 181  68 100 169 170 182 101 103 547
+[17] 546 554 556 555  86  61  88 531 543  90 229 527 458
+```
+]
+
+&lt;style&gt;
+.panel1-shortpath-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-shortpath-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-shortpath-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+.note[
+Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
+]
+
+---
+class: top
+
+count: false
+### Routing 
+ #### Calculating shortest paths
+&lt;img src="slides_files/figure-html/plotpath_user_01_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Routing 
+ #### Calculating shortest paths
+&lt;img src="slides_files/figure-html/plotpath_user_02_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Routing 
+ #### Calculating shortest paths
+&lt;img src="slides_files/figure-html/plotpath_user_03_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Routing 
+ #### Calculating shortest paths
+&lt;img src="slides_files/figure-html/plotpath_user_04_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Routing 
+ #### Calculating shortest paths
+&lt;img src="slides_files/figure-html/plotpath_user_05_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Routing 
+ #### Calculating shortest paths
+&lt;img src="slides_files/figure-html/plotpath_user_06_output-1.png" width="864" /&gt;
+
+&lt;style&gt;
+.panel1-plotpath-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-plotpath-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-plotpath-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+.note[
+Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
+]
+
+---
+class: top
+
+count: false
+ 
+### Routing 
+ #### Retrieving an OD cost matrix
+.panel1-costmatrix-user[
+
+```r
+*p1
+```
+]
+ 
+.panel2-costmatrix-user[
+
+```
+Geometry set for 1 feature 
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 4151376 ymin: 3206671 xmax: 4151376 ymax: 3206671
+Projected CRS: ETRS89-extended / LAEA Europe
+```
+
+```
+POINT (4151376 3206671)
+```
+]
+
+---
+count: false
+ 
+### Routing 
+ #### Retrieving an OD cost matrix
+.panel1-costmatrix-user[
+
+```r
+p1
+
+*st_network_cost(
+* net,
+* from = c(p1, p2, p3),
+* to = c(p1, p2, p3)
+*) 
+```
+]
+ 
+.panel2-costmatrix-user[
+
+```
+Geometry set for 1 feature 
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 4151376 ymin: 3206671 xmax: 4151376 ymax: 3206671
+Projected CRS: ETRS89-extended / LAEA Europe
+```
+
+```
+POINT (4151376 3206671)
+```
+
+```
+         [,1]     [,2]     [,3]
+[1,]    0.000 1614.252 2094.555
+[2,] 1614.252    0.000 1315.965
+[3,] 2094.555 1315.965    0.000
+```
+]
+
+&lt;style&gt;
+.panel1-costmatrix-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-costmatrix-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-costmatrix-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+.note[Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
+]
+
+---
+class: center, middle
+
+### What can we do?
+
+#### Spatial morphers
+
+---
+class: middle
+
+### What is morphing?
+
+Morphing networks is a functionality that has its roots in tidygraph. 
+
+--
+
+It allows you to:
+
+1. temporarily change the topology of the original network with the `tidygraph::morph()` verb,
+
+2. perform some actions on this “morphed state” of the network using dplyr verbs, 
+
+3. and finally merge the changes back into the original network with the `tidygraph::unmorph()` verb.
+
+--
+
+Morphing is meant to make temporary changes to your network.
+
+---
+class: middle
+
+### What about permanent changes?
+
+The same morpher functions that are used for temporary conversions during morphing can be used for lasting conversions when you provide them to the `tidygraph::convert()` verb instead.
+
+---
+class: middle
+
+### What type of **spatial** topology changes can be done?
+
+---
+class: top
+
+count: false
+### Spatial morphers 
+ #### to_spatial_contracted()
+&lt;img src="slides_files/figure-html/contracted_user_01_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial morphers 
+ #### to_spatial_contracted()
+&lt;img src="slides_files/figure-html/contracted_user_02_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial morphers 
+ #### to_spatial_contracted()
+&lt;img src="slides_files/figure-html/contracted_user_03_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial morphers 
+ #### to_spatial_contracted()
+&lt;img src="slides_files/figure-html/contracted_user_04_output-1.png" width="864" /&gt;
+
+&lt;style&gt;
+.panel1-contracted-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-contracted-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-contracted-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: middle
+
+count: false
+### Spatial morphers 
+ #### to_spatial_neighborhood()
+&lt;img src="slides_files/figure-html/neigh_user_01_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial morphers 
+ #### to_spatial_neighborhood()
+&lt;img src="slides_files/figure-html/neigh_user_02_output-1.png" width="864" /&gt;
+
+---
+count: false
+### Spatial morphers 
+ #### to_spatial_neighborhood()
+&lt;img src="slides_files/figure-html/neigh_user_03_output-1.png" width="864" /&gt;
+
+&lt;style&gt;
+.panel1-neigh-user {
+  color: black;
+  width: 99%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-neigh-user {
+  color: black;
+  width: NA%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-neigh-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+class: center, middle
+
+### Want more?
+
+--
+
+See the docs and find more examples [in the package website](https://luukvdmeer.github.io/sfnetworks/index.html)
+
+--
+
+### Have your own examples or ideas for the package?
+
+--
+
+Join the [Discussion on GitHub](https://github.com/luukvdmeer/sfnetworks/discussions)
+
+--
+
+### Found a bug?
+
+--
+
+Let us know with an [issue here](https://github.com/luukvdmeer/sfnetworks/issues)!
+
+
+---
+class: center, middle
+
+### Thank you!
+
+#### Q&amp;A
+
+.note[
+.pull-left-70[
+.pull-left[
+Project financed by:&lt;br&gt;![:scale 50%](https://raw.githubusercontent.com/RConsortium/artwork/main/r_consortium/R_Consortium-logo-horizontal-color.png)
+]
+
+.pull-right[
+Slides powered by [xaringan](https://github.com/yihui/xaringan), [xaringanthemer](https://github.com/gadenbuie/xaringanthemer) y [flipbookr](https://github.com/EvaMaeRey/flipbookr)&lt;br&gt;&lt;br&gt;
+]
+]
+.pull-right-30[
+![:scale 50%](https://www.r-project.org/conferences/useR.png)
+]
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script src="macro.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(figs/logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 110px;
+  height: 128px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
