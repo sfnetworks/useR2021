@@ -109,77 +109,10 @@ Road networks
 River networks
 ![](figs/river_network.png)
 ]
----
-class: center, middle, hide-logo
-
-## The offer in R:
-
---
-
-.pull-left[
-### Spatial analysis
-
-[\#rspatial](https://twitter.com/search?q=%23rspatial)
-
-`sf`
-
-`stars`
-
-`rgeos`
-
-`rgdal`
-
-`tmap`
-
-`ggmap`
-
-`mapview`
-
-...
-]
-
-.pull-right[
-### Network analysis
-
-[statnet](http://statnet.org/)
-
-`igraph`
-
-`tidygraph`
-
-`qgraph`
-
-`ggraph`
-
-`visNetwork`
-
-`networkD3`
-
-...
-]
 
 ---
 class: center, middle, hide-logo
-
-# And for geospatial network analysis?
-
---
-
-[dodgr](https://atfutures.github.io/dodgr/) 
-
-[cppRouting](https://github.com/vlarmet/cppRouting)
-
-[shp2graph](https://r-forge.r-project.org/projects/shp2graph)
-
-[spnetwork](https://github.com/edzer/spnetwork)
-
-[stplanr](https://docs.ropensci.org/stplanr/)
-
-...
-
----
-class: center, middle, hide-logo
-## Our idea
+## How do we work with them in R?
 
 --
 .pull-left[
@@ -197,43 +130,15 @@ class: center, middle, hide-logo
 ]
 
 ---
-class: middle, hide-logo
-
-.pull-left-70[
-.center[
-![:scale 80%](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/tidyverse_celestial.png)
-]
-.footnote[
-Art from [@allison_horst](https://twitter.com/allison_horst)
-]
-]
-
-.pull-right-30[
-### *Tidy* data
-
-1. A column for each variable.
-2. A row for each observation.
-3. A data frame for each observational unit.
-
-.footnote[
-Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1 - 23. doi:http://dx.doi.org/10.18637/jss.v059.i10
-]
-
-<br>
-
-- Implemented in the *tidyverse* packages
-
-- Allows piping syntax `%>%` 
-
-]
-
----
 class: center, middle, hide-logo
 
+.left[
 .pull-left-70[
-![](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/sf.png)
-.footnote[
-Artwork by [@allison_horst](https://twitter.com/allison_horst)
+```{r sfex}
+library(sf)
+library(sfnetworks)
+roxel
+```
 ]
 ]
 
@@ -253,9 +158,14 @@ S3 classes
 class: center, middle, hide-logo
 
 .pull-left-70[
-![:scale 80%](https://www.r-graph-gallery.com/314-custom-circle-packing-with-several-levels_files/figure-html/thecode3c-1.png)
-.footnote[
-Figure from [R Graph Gallery](https://www.r-graph-gallery.com/314-custom-circle-packing-with-several-levels.html)
+.left[
+```{r}
+library(tidygraph)
+roxel %>% 
+  st_drop_geometry() %>% 
+  as_tbl_graph()
+```
+
 ]
 ]
 
@@ -275,35 +185,6 @@ Supports [`dplyr`](https://dplyr.tidyverse.org/) verbs
 ![:scale 8%](https://github.com/thomasp85/ggraph/raw/master/man/figures/logo.png)
  Allows visualization through [`ggraph`](https://ggraph.data-imaginist.com/)
 ]
----
-class: center, middle
-# And `sfnetworks`?
-
-### The core:
-
-> A data structure that can be provided as input to both graph analytical functions of tidygraph and to spatial analytical functions of sf, without the need for conversion. 
-
---
-
-<br>
-
-> On top of that, it contains a set of spatial network specific functions that can be used alongside the offer of the two ‘parent packages’.
-
----
-class: middle
-## Installation
-
-Install from CRAN:
-
-```{r, eval = F}
-install.packages("sfnetworks")
-```
-
-Install the development version from GitHub:
-
-```{r, eval = F}
-remotes::install_github("luukvdmeer/sfnetworks")
-```
 
 ---
 class: middle
@@ -318,56 +199,30 @@ Edges: *to* and *from* columns along with edge `LINESTRING` geometries.
 Same coordinate system!
   
 ---
+```{r, include = FALSE}
+par(mar = c(1, 1, 1, 1))
+```
+
 `r chunk_reveal(chunk_name = "toyexample", break_type = "user", display_type = "both", title = "### Construction", width = c(35, 60))`
 
 ```{r toyexample, include = FALSE, warnings = FALSE, message = FALSE}
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %>% st_sf() -> #BREAK
-  nodes #BREAK
-
-st_sfc(
-  st_cast(st_union(p1,p2), "LINESTRING"),
-  st_cast(st_union(p1,p3), "LINESTRING"),
-  st_cast(st_union(p2,p3), "LINESTRING"),
-  crs = 4326
-) %>% st_sf() -> #BREAK
-  edges #BREAK
-
-edges$from = c(1, 1, 2)
-edges$to = c(2, 3, 3) #BREAK
-
-sfnetwork(nodes, edges, directed = FALSE) -> #BREAK
-  net #BREAK
-
-class(net)
+roxel %>% 
+  st_geometry() %>% #BREAK
+  plot()
 ```
 
 ---
-class: middle
-## Data structure: `sfnetwork` class
+```{r, include = FALSE}
+par(mar = c(0, 0, 0, 0))
+```
 
-### Conversion
-  
-Using `as_sfnetwork()` objects of the following classes can be converted:
-- `sf` with `POINT` or `LINESTRING` geometry
-- `tbl_graph` from `tidygraph`
-- `psp` or `linnet` from `spatstat`
-- `sfNetwork` from `stplanr`
+`r chunk_reveal(chunk_name = "toyexample2", break_type = "user", display_type = "both", title = "### Construction", width = c(35, 60))`
 
---
-
-External files can be read in via: 
-- `sf::st_read()`
-- `igraph::read_graph() %>% as_tbl_graph()` 
+```{r toyexample2, include = FALSE, warnings = FALSE, message = FALSE}
+roxel %>% 
+  as_sfnetwork() %>% #BREAK
+  plot() 
+```
 
 ---
 class: center, middle
@@ -419,9 +274,11 @@ l15 = st_sfc(st_linestring(c(p16, p20)))
 
 lines = c(l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15)
 
-edge_colors = function(x) ggsci::pal_igv(palette = "default")(ecount(x))
-
 net = as_sfnetwork(lines)
+```
+
+```{r, include = FALSE}
+edge_colors = function(x) ggsci::pal_igv(palette = "default")(ecount(x))
 ```
 
 ### Network pre-processing and cleaning
@@ -889,6 +746,22 @@ for (i in c(1:10)) {
   plot(nbh, col = palette[i], add = TRUE)
 }
 
+```
+
+---
+class: center, middle
+## Installation
+
+Install from CRAN:
+
+```{r, eval = F}
+install.packages("sfnetworks")
+```
+
+Install the development version from GitHub:
+
+```{r, eval = F}
+remotes::install_github("luukvdmeer/sfnetworks")
 ```
 
 ---

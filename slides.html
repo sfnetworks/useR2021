@@ -53,77 +53,10 @@ Road networks
 River networks
 ![](figs/river_network.png)
 ]
----
-class: center, middle, hide-logo
-
-## The offer in R:
-
---
-
-.pull-left[
-### Spatial analysis
-
-[\#rspatial](https://twitter.com/search?q=%23rspatial)
-
-`sf`
-
-`stars`
-
-`rgeos`
-
-`rgdal`
-
-`tmap`
-
-`ggmap`
-
-`mapview`
-
-...
-]
-
-.pull-right[
-### Network analysis
-
-[statnet](http://statnet.org/)
-
-`igraph`
-
-`tidygraph`
-
-`qgraph`
-
-`ggraph`
-
-`visNetwork`
-
-`networkD3`
-
-...
-]
 
 ---
 class: center, middle, hide-logo
-
-# And for geospatial network analysis?
-
---
-
-[dodgr](https://atfutures.github.io/dodgr/) 
-
-[cppRouting](https://github.com/vlarmet/cppRouting)
-
-[shp2graph](https://r-forge.r-project.org/projects/shp2graph)
-
-[spnetwork](https://github.com/edzer/spnetwork)
-
-[stplanr](https://docs.ropensci.org/stplanr/)
-
-...
-
----
-class: center, middle, hide-logo
-## Our idea
+## How do we work with them in R?
 
 --
 .pull-left[
@@ -141,43 +74,37 @@ class: center, middle, hide-logo
 ]
 
 ---
-class: middle, hide-logo
-
-.pull-left-70[
-.center[
-![:scale 80%](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/tidyverse_celestial.png)
-]
-.footnote[
-Art from [@allison_horst](https://twitter.com/allison_horst)
-]
-]
-
-.pull-right-30[
-### *Tidy* data
-
-1. A column for each variable.
-2. A row for each observation.
-3. A data frame for each observational unit.
-
-.footnote[
-Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1 - 23. doi:http://dx.doi.org/10.18637/jss.v059.i10
-]
-
-&lt;br&gt;
-
-- Implemented in the *tidyverse* packages
-
-- Allows piping syntax `%&gt;%` 
-
-]
-
----
 class: center, middle, hide-logo
 
+.left[
 .pull-left-70[
-![](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/sf.png)
-.footnote[
-Artwork by [@allison_horst](https://twitter.com/allison_horst)
+
+```r
+library(sf)
+library(sfnetworks)
+roxel
+```
+
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;Simple feature collection with 851 features and 2 fields
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax: 51.9612
+Geodetic CRS:  WGS 84
+&lt;span style='color: #555555;'&gt;# A tibble: 851 x 3&lt;/span&gt;
+   name          type                                         geometry
+ &lt;span style='color: #555555;'&gt;*&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;         &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                                &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt; 1&lt;/span&gt; Havixbecker ~ residen~       (7.533722 51.95556, 7.533461 51.95576)
+&lt;span style='color: #555555;'&gt; 2&lt;/span&gt; Pienersallee  seconda~ (7.532442 51.95422, 7.53236 51.95377, 7.532~
+&lt;span style='color: #555555;'&gt; 3&lt;/span&gt; Schulte-Bern~ residen~ (7.532709 51.95209, 7.532823 51.95239, 7.53~
+&lt;span style='color: #555555;'&gt; 4&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            path     (7.540063 51.94468, 7.539696 51.94479, 7.53~
+&lt;span style='color: #555555;'&gt; 5&lt;/span&gt; Welsingheide  residen~        (7.537673 51.9475, 7.537614 51.94562)
+&lt;span style='color: #555555;'&gt; 6&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            footway  (7.543791 51.94733, 7.54369 51.94686, 7.543~
+&lt;span style='color: #555555;'&gt; 7&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            footway         (7.54012 51.94478, 7.539931 51.94514)
+&lt;span style='color: #555555;'&gt; 8&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            path     (7.53822 51.94546, 7.538131 51.94549, 7.538~
+&lt;span style='color: #555555;'&gt; 9&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            track    (7.540063 51.94468, 7.540338 51.94468, 7.54~
+&lt;span style='color: #555555;'&gt;10&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            track    (7.5424 51.94599, 7.54205 51.94629, 7.54196~
+&lt;span style='color: #555555;'&gt;# ... with 841 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
 ]
 ]
 
@@ -197,9 +124,39 @@ S3 classes
 class: center, middle, hide-logo
 
 .pull-left-70[
-![:scale 80%](https://www.r-graph-gallery.com/314-custom-circle-packing-with-several-levels_files/figure-html/thecode3c-1.png)
-.footnote[
-Figure from [R Graph Gallery](https://www.r-graph-gallery.com/314-custom-circle-packing-with-several-levels.html)
+.left[
+
+```r
+library(tidygraph)
+roxel %&gt;% 
+  st_drop_geometry() %&gt;% 
+  as_tbl_graph()
+```
+
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tbl_graph: 91 nodes and 851 edges
+#
+# A directed acyclic multigraph with 2 components
+#
+# Node Data: 91 x 1 (active)&lt;/span&gt;
+  name                 
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;                
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; Havixbecker Strasse  
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; Pienersallee         
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; Schulte-Bernd-Strasse
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt; NA                   
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt; Welsingheide         
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt; Nottulner Landweg    
+&lt;span style='color: #555555;'&gt;# ... with 85 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Edge Data: 851 x 2&lt;/span&gt;
+   from    to
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1    83
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     2    84
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     3    83
+&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+
 ]
 ]
 
@@ -219,37 +176,6 @@ Supports [`dplyr`](https://dplyr.tidyverse.org/) verbs
 ![:scale 8%](https://github.com/thomasp85/ggraph/raw/master/man/figures/logo.png)
  Allows visualization through [`ggraph`](https://ggraph.data-imaginist.com/)
 ]
----
-class: center, middle
-# And `sfnetworks`?
-
-### The core:
-
-&gt; A data structure that can be provided as input to both graph analytical functions of tidygraph and to spatial analytical functions of sf, without the need for conversion. 
-
---
-
-&lt;br&gt;
-
-&gt; On top of that, it contains a set of spatial network specific functions that can be used alongside the offer of the two ‘parent packages’.
-
----
-class: middle
-## Installation
-
-Install from CRAN:
-
-
-```r
-install.packages("sfnetworks")
-```
-
-Install the development version from GitHub:
-
-
-```r
-remotes::install_github("luukvdmeer/sfnetworks")
-```
 
 ---
 class: middle
@@ -264,108 +190,48 @@ Edges: *to* and *from* columns along with edge `LINESTRING` geometries.
 Same coordinate system!
   
 ---
+
+
 count: false
  
 ### Construction
 .panel1-toyexample-user[
 
 ```r
-*library(sf)
-*library(sfnetworks)
-
-*p1 = st_point(c(7, 51))
-*p2 = st_point(c(7, 52))
-*p3 = st_point(c(8, 52))
-
-*st_sfc(
-* p1, p2, p3,
-* crs = 4326
-*) %&gt;% st_sf()
+*roxel %&gt;%
+* st_geometry()
 ```
 ]
  
 .panel2-toyexample-user[
 
 ```
-Simple feature collection with 3 features and 0 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52
-Geodetic CRS:  WGS 84
-      geometry
-1 POINT (7 51)
-2 POINT (7 52)
-3 POINT (8 52)
-```
-]
-
----
-count: false
- 
-### Construction
-.panel1-toyexample-user[
-
-```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-* nodes
-```
-]
- 
-.panel2-toyexample-user[
-
-]
-
----
-count: false
- 
-### Construction
-.panel1-toyexample-user[
-
-```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  nodes
-
-*st_sfc(
-* st_cast(st_union(p1,p2), "LINESTRING"),
-* st_cast(st_union(p1,p3), "LINESTRING"),
-* st_cast(st_union(p2,p3), "LINESTRING"),
-* crs = 4326
-*) %&gt;% st_sf()
-```
-]
- 
-.panel2-toyexample-user[
-
-```
-Simple feature collection with 3 features and 0 fields
+Geometry set for 851 features 
 Geometry type: LINESTRING
 Dimension:     XY
-Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52
+Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax: 51.9612
 Geodetic CRS:  WGS 84
-                 geometry
-1 LINESTRING (7 51, 7 52)
-2 LINESTRING (7 51, 8 52)
-3 LINESTRING (7 52, 8 52)
+First 5 geometries:
+```
+
+```
+LINESTRING (7.533722 51.95556, 7.533461 51.95576)
+```
+
+```
+LINESTRING (7.532442 51.95422, 7.53236 51.95377...
+```
+
+```
+LINESTRING (7.532709 51.95209, 7.532823 51.9523...
+```
+
+```
+LINESTRING (7.540063 51.94468, 7.539696 51.9447...
+```
+
+```
+LINESTRING (7.537673 51.9475, 7.537614 51.94562)
 ```
 ]
 
@@ -376,241 +242,14 @@ count: false
 .panel1-toyexample-user[
 
 ```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  nodes
-
-st_sfc(
-  st_cast(st_union(p1,p2), "LINESTRING"),
-  st_cast(st_union(p1,p3), "LINESTRING"),
-  st_cast(st_union(p2,p3), "LINESTRING"),
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-* edges
+roxel %&gt;%
+  st_geometry() %&gt;%
+* plot()
 ```
 ]
  
 .panel2-toyexample-user[
-
-]
-
----
-count: false
- 
-### Construction
-.panel1-toyexample-user[
-
-```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  nodes
-
-st_sfc(
-  st_cast(st_union(p1,p2), "LINESTRING"),
-  st_cast(st_union(p1,p3), "LINESTRING"),
-  st_cast(st_union(p2,p3), "LINESTRING"),
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  edges
-
-*edges$from = c(1, 1, 2)
-*edges$to = c(2, 3, 3)
-```
-]
- 
-.panel2-toyexample-user[
-
-]
-
----
-count: false
- 
-### Construction
-.panel1-toyexample-user[
-
-```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  nodes
-
-st_sfc(
-  st_cast(st_union(p1,p2), "LINESTRING"),
-  st_cast(st_union(p1,p3), "LINESTRING"),
-  st_cast(st_union(p2,p3), "LINESTRING"),
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  edges
-
-edges$from = c(1, 1, 2)
-edges$to = c(2, 3, 3)
-
-*sfnetwork(nodes, edges, directed = FALSE)
-```
-]
- 
-.panel2-toyexample-user[
-
-```
-Checking if spatial network structure is valid...
-```
-
-```
-Spatial network structure is valid
-```
-
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;3&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;3&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
-#
-# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
-#
-# An undirected simple graph with 1 component with spatially explicit edges
-#
-# Node Data:     3 x 1 (active)&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52&lt;/span&gt;
-     geometry
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;      (7 51)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;      (7 52)
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;      (8 52)
-&lt;span style='color: #555555;'&gt;#
-# Edge Data:     3 x 3&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7 ymin: 51 xmax: 8 ymax: 52&lt;/span&gt;
-   from    to         geometry
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2     (7 51, 7 52)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     1     3     (7 51, 8 52)
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     2     3     (7 52, 8 52)
-&lt;/CODE&gt;&lt;/PRE&gt;
-]
-
----
-count: false
- 
-### Construction
-.panel1-toyexample-user[
-
-```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  nodes
-
-st_sfc(
-  st_cast(st_union(p1,p2), "LINESTRING"),
-  st_cast(st_union(p1,p3), "LINESTRING"),
-  st_cast(st_union(p2,p3), "LINESTRING"),
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  edges
-
-edges$from = c(1, 1, 2)
-edges$to = c(2, 3, 3)
-
-sfnetwork(nodes, edges, directed = FALSE) -&gt;
-* net
-```
-]
- 
-.panel2-toyexample-user[
-
-```
-Checking if spatial network structure is valid...
-```
-
-```
-Spatial network structure is valid
-```
-]
-
----
-count: false
- 
-### Construction
-.panel1-toyexample-user[
-
-```r
-library(sf)
-library(sfnetworks)
-
-p1 = st_point(c(7, 51))
-p2 = st_point(c(7, 52))
-p3 = st_point(c(8, 52))
-
-st_sfc(
-  p1, p2, p3,
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  nodes
-
-st_sfc(
-  st_cast(st_union(p1,p2), "LINESTRING"),
-  st_cast(st_union(p1,p3), "LINESTRING"),
-  st_cast(st_union(p2,p3), "LINESTRING"),
-  crs = 4326
-) %&gt;% st_sf() -&gt;
-  edges
-
-edges$from = c(1, 1, 2)
-edges$to = c(2, 3, 3)
-
-sfnetwork(nodes, edges, directed = FALSE) -&gt;
-  net
-
-*class(net)
-```
-]
- 
-.panel2-toyexample-user[
-
-```
-Checking if spatial network structure is valid...
-```
-
-```
-Spatial network structure is valid
-```
-
-```
-[1] "sfnetwork" "tbl_graph" "igraph"   
-```
+&lt;img src="slides_files/figure-html/toyexample_user_02_output-1.png" width="864" /&gt;
 ]
 
 &lt;style&gt;
@@ -645,22 +284,102 @@ Spatial network structure is valid
 
 
 ---
-class: middle
-## Data structure: `sfnetwork` class
 
-### Conversion
-  
-Using `as_sfnetwork()` objects of the following classes can be converted:
-- `sf` with `POINT` or `LINESTRING` geometry
-- `tbl_graph` from `tidygraph`
-- `psp` or `linnet` from `spatstat`
-- `sfNetwork` from `stplanr`
 
---
+count: false
+ 
+### Construction
+.panel1-toyexample2-user[
 
-External files can be read in via: 
-- `sf::st_read()`
-- `igraph::read_graph() %&gt;% as_tbl_graph()` 
+```r
+*roxel %&gt;%
+* as_sfnetwork()
+```
+]
+ 
+.panel2-toyexample2-user[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# A directed multigraph with 14 components with spatially explicit edges
+#
+# Node Data:     701 x 1 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522622 ymin: 51.94151 xmax: 7.546705 ymax:
+#   51.9612&lt;/span&gt;
+             geometry
+          &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (7.533722 51.95556)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (7.533461 51.95576)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (7.532442 51.95422)
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt;  (7.53209 51.95328)
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt; (7.532709 51.95209)
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt; (7.532869 51.95257)
+&lt;span style='color: #555555;'&gt;# ... with 695 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Edge Data:     851 x 5&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax:
+#   51.9612&lt;/span&gt;
+   from    to name        type                                geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbecke~ reside~ (7.533722 51.95556, 7.533461 51.955~
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersall~ second~ (7.532442 51.95422, 7.53236 51.9537~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-Be~ reside~ (7.532709 51.95209, 7.532823 51.952~
+&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+count: false
+ 
+### Construction
+.panel1-toyexample2-user[
+
+```r
+roxel %&gt;%
+  as_sfnetwork() %&gt;%
+* plot()
+```
+]
+ 
+.panel2-toyexample2-user[
+&lt;img src="slides_files/figure-html/toyexample2_user_02_output-1.png" width="864" /&gt;
+]
+
+&lt;style&gt;
+.panel1-toyexample2-user {
+  color: black;
+  width: 36.1052631578947%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-toyexample2-user {
+  color: black;
+  width: 61.8947368421053%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-toyexample2-user {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
 
 ---
 class: center, middle
@@ -671,6 +390,8 @@ class: center, middle
 
 ---
 class: middle
+
+
 
 
 
@@ -1607,6 +1328,24 @@ count: false
 
 
 
+
+---
+class: center, middle
+## Installation
+
+Install from CRAN:
+
+
+```r
+install.packages("sfnetworks")
+```
+
+Install the development version from GitHub:
+
+
+```r
+remotes::install_github("luukvdmeer/sfnetworks")
+```
 
 ---
 class: center, middle
