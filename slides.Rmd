@@ -1089,7 +1089,7 @@ Project financed by:<br>![:scale 50%](https://raw.githubusercontent.com/RConsort
 ]
 
 .pull-right[
-Slides powered by [xaringan](https://github.com/yihui/xaringan), [xaringanthemer](https://github.com/gadenbuie/xaringanthemer) y [flipbookr](https://github.com/EvaMaeRey/flipbookr)<br><br>
+Slides powered by [xaringan](https://github.com/yihui/xaringan), [xaringanthemer](https://github.com/gadenbuie/xaringanthemer) and [flipbookr](https://github.com/EvaMaeRey/flipbookr)<br><br>
 ]
 ]
 .pull-right-30[
