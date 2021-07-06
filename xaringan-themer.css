@@ -35,7 +35,7 @@
   --code-font-is-google: 1;
   --base-font-size: 20px;
   --text-font-size: 1rem;
-  --code-font-size: 14px;
+  --code-font-size: 12px;
   --code-inline-font-size: 1em;
   --header-h1-font-size: 2.75rem;
   --header-h2-font-size: 2.25rem;
@@ -274,6 +274,14 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 .pull-right-70 {
   float: right;
   width: 65.8%;
+}
+.pull-left-40 {
+  float: left;
+  width: 37.6%;
+}
+.pull-right-60 {
+  float: right;
+  width: 56.4%;
 }
 .orange {
   color: #ffa500;

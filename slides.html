@@ -30,58 +30,93 @@ class: center, middle, hide-logo
 PRE.fansi SPAN {padding-top: .25em; padding-bottom: .25em};
 &lt;/STYLE&gt;
 
+The slides can be found here: https://sfnetworks.github.io/useR2021/slides
 
-### First things first...
-
-You can find the slides for this presentation here: https://sfnetworks.github.io/useR2021/slides
- 
-...
-
-and the source code on this GitHub repository: https://github.com/sfnetworks/useR2021
+The code to create them can be found here: https://github.com/sfnetworks/useR2021
 
 ---
-class: center, middle, hide-logo
+class: center, top, hide-logo
 
-## What are geospatial networks?
+## &lt;span style="color:#b3b3b3"&gt;Tidy&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Geospatial Networks&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;in R&lt;/span&gt;
 
-.pull-left[
-Road networks
-![](figs/road_network.png)
-]
-
-.pull-right[
-River networks
+.left[
+.pull-left-70[
 ![](figs/river_network.png)
 ]
-
----
-class: center, middle, hide-logo
-## How do we work with them in R?
-
---
-.pull-left[
-![](https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif)
 ]
 
---
+.pull-right-30[
 
-.pull-right[
-![:scale 38%](https://raw.githubusercontent.com/thomasp85/tidygraph/master/man/figures/logo.png)
-]
---
-.center[
-![:scale 20%](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/master/man/figures/logo.png)
+Nodes and edges embedded in geographical space
+
+Nodes usually associated with **POINT** geometries
+
+Edges usually associated with **LINESTRING** geometries
+
+The network topology does not contain *all* information of a geospatial network
+
+Both topological *and* spatial information are essential when analyzing them
+
 ]
 
 ---
-class: center, middle, hide-logo
+class: center, top, hide-logo
+
+## &lt;span style="color:#ffa500"&gt;Tidy&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;Geospatial Networks&lt;/span&gt; &lt;span style="color:#ffa500"&gt;in R&lt;/span&gt;
+
+.left[
+.pull-left-70[
+
+```r
+library(tidyverse)
+library(sfnetworks)
+roxel %&gt;%
+  as_tibble() %&gt;%
+  select(name, type)
+```
+
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tibble: 851 x 2&lt;/span&gt;
+   name                  type       
+   &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;                 &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;      
+&lt;span style='color: #555555;'&gt; 1&lt;/span&gt; Havixbecker Strasse   residential
+&lt;span style='color: #555555;'&gt; 2&lt;/span&gt; Pienersallee          secondary  
+&lt;span style='color: #555555;'&gt; 3&lt;/span&gt; Schulte-Bernd-Strasse residential
+&lt;span style='color: #555555;'&gt; 4&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;                    path       
+&lt;span style='color: #555555;'&gt; 5&lt;/span&gt; Welsingheide          residential
+&lt;span style='color: #555555;'&gt; 6&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;                    footway    
+&lt;span style='color: #555555;'&gt; 7&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;                    footway    
+&lt;span style='color: #555555;'&gt; 8&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;                    path       
+&lt;span style='color: #555555;'&gt; 9&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;                    track      
+&lt;span style='color: #555555;'&gt;10&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;                    track      
+&lt;span style='color: #555555;'&gt;# ... with 841 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+]
+
+.pull-right-30[
+
+![:scale 15%](https://raw.githubusercontent.com/tidyverse/tidyverse/master/man/figures/logo.png)
+
+**The tidyverse**
+
+Collection of R packages for data science
+
+Shared design philosophy
+
+Tidy data structures
+
+]
+
+---
+class: center, top, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Geospatial&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;Networks&lt;/span&gt; &lt;span style="color:#ffa500"&gt;in R&lt;/span&gt;
 
 .left[
 .pull-left-70[
 
 ```r
 library(sf)
-library(sfnetworks)
 roxel
 ```
 
@@ -110,194 +145,423 @@ Geodetic CRS:  WGS 84
 
 .pull-right-30[
 
-### ** `sf` package**
+![:scale 15%](https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif)
 
-Simple features in R
+**The sf package**
 
-Spatial vector data (points, lines, polygons)
+R package for spatial data science
 
-Compatible with *tidy* workflows
+Standardized storage of geographic features (points, lines, polygons)
 
-S3 classes
+Geometric operations (intersections, unions, ..)
+
+Compatible with the tidyverse
+
+New specific *verbs* for spatial data
+
 ]
+
 ---
-class: center, middle, hide-logo
+class: top, center, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Geospatial&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;Networks&lt;/span&gt; &lt;span style="color:#ffa500"&gt;in R&lt;/span&gt;
+
+
+
+.pull-left-30[
+.left[
+
+```r
+lines = roxel %&gt;%
+  st_transform(3035)
+  
+plot(st_geometry(lines))
+```
+]
+]
+
+.pull-left-70[
+&lt;img src="slides_files/figure-html/unnamed-chunk-3-1.png" width="864" /&gt;
+]
+
+---
+class: top, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Geospatial&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;Networks&lt;/span&gt; &lt;span style="color:#ffa500"&gt;in R&lt;/span&gt;
+
+.pull-left-40[
+
+```r
+points = c(st_point(c(4151358, 3208045)),
+           st_point(c(4151340, 3207520)), 
+           st_point(c(4151756, 3207506)),
+           st_point(c(4151774, 3208031)))
+
+polygon = st_multipoint(points) %&gt;%
+  st_cast("POLYGON") %&gt;%
+  st_sfc(crs = 3035)
+
+plot(polygon)
+```
+]
+
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-5-1.png" width="864" /&gt;
+]
+
+---
+class: top, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Geospatial&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;Networks&lt;/span&gt; &lt;span style="color:#ffa500"&gt;in R&lt;/span&gt;
+
+.pull-left-40[
+
+```r
+plot(st_geometry(lines))
+plot(
+  polygon,
+  border = "red", 
+  lty = 4, lwd = 4, 
+  add = TRUE
+)
+```
+]
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-7-1.png" width="864" /&gt;
+]
+
+
+---
+class: top, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Geospatial&lt;/span&gt; &lt;span style="color:#b3b3b3"&gt;Networks&lt;/span&gt; &lt;span style="color:#ffa500"&gt;in R&lt;/span&gt;
+
+.pull-left-30[
+.left[
+
+```r
+lines %&gt;%
+  st_filter(
+    polygon,
+    .pred = st_intersects
+  ) %&gt;%
+  st_geometry() %&gt;%
+  plot()
+```
+]
+]
+
+.pull-left-70[
+&lt;img src="slides_files/figure-html/unnamed-chunk-9-1.png" width="864" /&gt;
+]
+
+
+---
+class: center, top, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy Geospatial&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Networks in R&lt;/span&gt;
 
 .pull-left-70[
 .left[
 
 ```r
 library(tidygraph)
-roxel %&gt;% 
-  st_drop_geometry() %&gt;% 
-  as_tbl_graph()
+nodes = tibble(name = letters[1:4])
+edges = tibble(from = c(1,2,3,4), to = c(2,3,4,1))
+tbl_graph(nodes, edges)
 ```
 
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tbl_graph: 91 nodes and 851 edges
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tbl_graph: 4 nodes and 4 edges
 #
-# A directed acyclic multigraph with 2 components
+# A directed simple graph with 1 component
 #
-# Node Data: 91 x 1 (active)&lt;/span&gt;
-  name                 
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;                
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; Havixbecker Strasse  
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; Pienersallee         
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt; Schulte-Bernd-Strasse
-&lt;span style='color: #555555;'&gt;4&lt;/span&gt; NA                   
-&lt;span style='color: #555555;'&gt;5&lt;/span&gt; Welsingheide         
-&lt;span style='color: #555555;'&gt;6&lt;/span&gt; Nottulner Landweg    
-&lt;span style='color: #555555;'&gt;# ... with 85 more rows&lt;/span&gt;
+# Node Data: 4 x 1 (active)&lt;/span&gt;
+  name 
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; a    
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; b    
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; c    
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt; d    
 &lt;span style='color: #555555;'&gt;#
-# Edge Data: 851 x 2&lt;/span&gt;
+# Edge Data: 4 x 2&lt;/span&gt;
    from    to
   &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1    83
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     2    84
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     3    83
-&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     2     3
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     3     4
+&lt;span style='color: #555555;'&gt;# ... with 1 more row&lt;/span&gt;
 &lt;/CODE&gt;&lt;/PRE&gt;
-
 ]
 ]
 
 .pull-right-30[
 
-### ** `tidygraph` package**
+![:scale 15%](https://raw.githubusercontent.com/thomasp85/tidygraph/master/man/figures/logo.png)
 
-![:scale 10%](https://avatars3.githubusercontent.com/u/3735184?s=200&amp;v=4)
- Interface to [`igraph`](https://igraph.org/r/)  
- 
-![:scale 8%](https://github.com/tidyverse/dplyr/raw/master/man/figures/logo.png)
-Supports [`dplyr`](https://dplyr.tidyverse.org/) verbs 
+**The tidygraph package**
 
-![:scale 8%](https://raw.githubusercontent.com/thomasp85/tidygraph/master/man/figures/logo.png)
- Introduces new specific *verbs* for graph structures (e.g. `morph`, `bind_graphs`, `graph_join`)
+Tidy interface to the **igraph** library for graph analysis
 
-![:scale 8%](https://github.com/thomasp85/ggraph/raw/master/man/figures/logo.png)
- Allows visualization through [`ggraph`](https://ggraph.data-imaginist.com/)
+Models a graph as a collection of two tibbles
+
+Graph algorithms (centralities, clustering, shortest paths, ..)
+
+Compatible with the tidyverse
+
+New specific *verbs* for graph structures
+
 ]
 
 ---
-class: middle
-## Data structure: `sfnetwork` class
+class: top, center, hide-logo
 
-### Construction
-  
-Nodes: `sf` object with `POINT` geometries
+## &lt;span style="color:#b3b3b3"&gt;Tidy Geospatial&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Networks in R&lt;/span&gt;
 
-Edges: *to* and *from* columns along with edge `LINESTRING` geometries.
-
-Same coordinate system!
-  
----
-
-
-count: false
- 
-### Construction
-.panel1-toyexample-user[
+.pull-left[
+.left[
 
 ```r
-*roxel %&gt;%
-* st_geometry()
+graph = tbl_graph(nodes, edges) %&gt;%
+  activate(nodes) %&gt;%
+  mutate(degree = centrality_degree()) %&gt;%
+  activate(edges) %&gt;%
+  mutate(centrality = centrality_edge_betweenness()) %&gt;%
+  arrange(centrality)
+
+graph
 ```
 ]
- 
-.panel2-toyexample-user[
+]
 
+.pull-right[
+.left[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tbl_graph: 4 nodes and 4 edges
+#
+# A directed simple graph with 1 component
+#
+# Edge Data: 4 x 3 (active)&lt;/span&gt;
+   from    to centrality
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt;      &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;dbl&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2          6
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     2     3          6
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     3     4          6
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt;     4     1          6
+&lt;span style='color: #555555;'&gt;#
+# Node Data: 4 x 2&lt;/span&gt;
+  name  degree
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;dbl&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; a          1
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; b          1
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; c          1
+&lt;span style='color: #555555;'&gt;# ... with 1 more row&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+]
+
+
+---
+class: top, center, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy Geospatial&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Networks in R&lt;/span&gt;
+
+.pull-left[
+.left[
+
+```r
+geoms = roxel[1:4, ] %&gt;%
+  st_geometry() %&gt;%
+  st_transform(3035) %&gt;%
+  st_centroid()
+
+nodes = st_sf(name = letters[1:4], geometry = geoms)
+edges = tibble(from = c(1,2,3,4), to = c(2,3,4,1))
+
+graph = tbl_graph(nodes, edges)
+graph
 ```
-Geometry set for 851 features 
+]
+]
+
+.pull-right[
+.left[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tbl_graph: 4 nodes and 4 edges
+#
+# A directed simple graph with 1 component
+#
+# Node Data: 4 x 2 (active)&lt;/span&gt;
+  name           geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; a     (4151482 3207934)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; b     (4151387 3207724)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; c     (4151415 3207565)
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt; d     (4151824 3206744)
+&lt;span style='color: #555555;'&gt;#
+# Edge Data: 4 x 2&lt;/span&gt;
+   from    to
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     2     3
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     3     4
+&lt;span style='color: #555555;'&gt;# ... with 1 more row&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+]
+
+---
+class: top, center, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy Geospatial&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Networks in R&lt;/span&gt;
+
+
+
+.left[
+
+```r
+plot(geoms, pch = 20, cex = 4, col = "#ffa500", axes = TRUE)
+```
+
+&lt;img src="slides_files/figure-html/unnamed-chunk-16-1.png" width="864" /&gt;
+]
+
+---
+class: top, center, hide-logo
+
+## &lt;span style="color:#b3b3b3"&gt;Tidy Geospatial&lt;/span&gt; &lt;span style="color:#ffa500"&gt;Networks in R&lt;/span&gt;
+
+
+
+.left[
+
+```r
+plot(graph)
+```
+
+&lt;img src="slides_files/figure-html/unnamed-chunk-18-1.png" width="864" /&gt;
+]
+
+---
+class: center, top, hide-logo
+
+## Tidy Geospatial Networks in R?
+
+&lt;center&gt;&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;One of the biggest reasons we still have ArcGIS licenses is for Network Analysis (drive times, service areas etc). Does anyone have &lt;a href="https://twitter.com/hashtag/foss4g?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#foss4g&lt;/a&gt; tools for this they like? Last time we tried pgRouting (yrs ago) it didn&amp;#39;t feel fully formed yet, &lt;a href="https://twitter.com/hashtag/gischat?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#gischat&lt;/a&gt;&lt;/p&gt;&amp;mdash; Zev Ross (@zevross) &lt;a href="https://twitter.com/zevross/status/1089908839816794118?ref_src=twsrc%5Etfw"&gt;January 28, 2019&lt;/a&gt;&lt;/blockquote&gt;&lt;/center&gt; &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+---
+class: center, top, hide-logo
+
+## Tidy Geospatial Networks in R!
+
+.pull-left[
+![](https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif)
+]
+
+.pull-right[
+![:scale 38%](https://raw.githubusercontent.com/thomasp85/tidygraph/master/man/figures/logo.png)
+]
+
+.center[
+![:scale 20%](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/master/man/figures/logo.png)
+]
+
+---
+class: center, top, hide-logo
+
+## Tidy Geospatial Networks in R!
+
+**tidygraph:**
+
+&gt;  Relational data cannot in any meaningful way be encoded as a single tidy data frame. On the other hand, both node and edge data by itself fits very well within the tidy concept as each node and edge is, in a sense, a single observation. Thus, a close approximation of tidyness for relational data is two tidy data frames, one describing the node data and one describing the edge data.
+
+**sfnetworks:**
+
+&gt; A close approximation of tidyness for relational geospatial data is two sf objects, one describing the node data and one describing the edge data
+  
+---
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
+
+```r
+roxel %&gt;% 
+  st_geometry() %&gt;%
+  plot()
+```
+]
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-20-1.png" width="864" /&gt;
+]
+
+---
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
+
+```r
+roxel %&gt;% 
+  as_sfnetwork() %&gt;%
+  plot()
+```
+]
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-22-1.png" width="864" /&gt;
+]
+
+---
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
+
+```r
+roxel
+```
+]
+
+.pull-right-60[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;Simple feature collection with 851 features and 2 fields
 Geometry type: LINESTRING
 Dimension:     XY
 Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax: 51.9612
 Geodetic CRS:  WGS 84
-First 5 geometries:
-```
-
-```
-LINESTRING (7.533722 51.95556, 7.533461 51.95576)
-```
-
-```
-LINESTRING (7.532442 51.95422, 7.53236 51.95377...
-```
-
-```
-LINESTRING (7.532709 51.95209, 7.532823 51.9523...
-```
-
-```
-LINESTRING (7.540063 51.94468, 7.539696 51.9447...
-```
-
-```
-LINESTRING (7.537673 51.9475, 7.537614 51.94562)
-```
+&lt;span style='color: #555555;'&gt;# A tibble: 851 x 3&lt;/span&gt;
+   name          type                                         geometry
+ &lt;span style='color: #555555;'&gt;*&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;         &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                                &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt; 1&lt;/span&gt; Havixbecker ~ residen~       (7.533722 51.95556, 7.533461 51.95576)
+&lt;span style='color: #555555;'&gt; 2&lt;/span&gt; Pienersallee  seconda~ (7.532442 51.95422, 7.53236 51.95377, 7.532~
+&lt;span style='color: #555555;'&gt; 3&lt;/span&gt; Schulte-Bern~ residen~ (7.532709 51.95209, 7.532823 51.95239, 7.53~
+&lt;span style='color: #555555;'&gt; 4&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            path     (7.540063 51.94468, 7.539696 51.94479, 7.53~
+&lt;span style='color: #555555;'&gt; 5&lt;/span&gt; Welsingheide  residen~        (7.537673 51.9475, 7.537614 51.94562)
+&lt;span style='color: #555555;'&gt; 6&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            footway  (7.543791 51.94733, 7.54369 51.94686, 7.543~
+&lt;span style='color: #555555;'&gt; 7&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            footway         (7.54012 51.94478, 7.539931 51.94514)
+&lt;span style='color: #555555;'&gt; 8&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            path     (7.53822 51.94546, 7.538131 51.94549, 7.538~
+&lt;span style='color: #555555;'&gt; 9&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            track    (7.540063 51.94468, 7.540338 51.94468, 7.54~
+&lt;span style='color: #555555;'&gt;10&lt;/span&gt; &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;            track    (7.5424 51.94599, 7.54205 51.94629, 7.54196~
+&lt;span style='color: #555555;'&gt;# ... with 841 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
 ]
 
 ---
-count: false
- 
-### Construction
-.panel1-toyexample-user[
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
 
 ```r
-roxel %&gt;%
-  st_geometry() %&gt;%
-* plot()
+roxel %&gt;% 
+  as_sfnetwork()
 ```
 ]
- 
-.panel2-toyexample-user[
-&lt;img src="slides_files/figure-html/toyexample_user_02_output-1.png" width="864" /&gt;
-]
 
-&lt;style&gt;
-.panel1-toyexample-user {
-  color: black;
-  width: 36.1052631578947%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-toyexample-user {
-  color: black;
-  width: 61.8947368421053%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-toyexample-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
-
----
-
-
-count: false
- 
-### Construction
-.panel1-toyexample2-user[
-
-```r
-*roxel %&gt;%
-* as_sfnetwork()
-```
-]
- 
-.panel2-toyexample2-user[
+.pull-right-60[
 &lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
 #
 # CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
@@ -334,52 +598,281 @@ count: false
 ]
 
 ---
-count: false
- 
-### Construction
-.panel1-toyexample2-user[
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
 
 ```r
-roxel %&gt;%
+roxel %&gt;% 
   as_sfnetwork() %&gt;%
-* plot()
+  activate(nodes) %&gt;%
+  st_as_sf()
 ```
 ]
- 
-.panel2-toyexample2-user[
-&lt;img src="slides_files/figure-html/toyexample2_user_02_output-1.png" width="864" /&gt;
+
+.pull-right-60[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;Simple feature collection with 701 features and 0 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 7.522622 ymin: 51.94151 xmax: 7.546705 ymax: 51.9612
+Geodetic CRS:  WGS 84
+&lt;span style='color: #555555;'&gt;# A tibble: 701 x 1&lt;/span&gt;
+              geometry
+           &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt; 1&lt;/span&gt; (7.533722 51.95556)
+&lt;span style='color: #555555;'&gt; 2&lt;/span&gt; (7.533461 51.95576)
+&lt;span style='color: #555555;'&gt; 3&lt;/span&gt; (7.532442 51.95422)
+&lt;span style='color: #555555;'&gt; 4&lt;/span&gt;  (7.53209 51.95328)
+&lt;span style='color: #555555;'&gt; 5&lt;/span&gt; (7.532709 51.95209)
+&lt;span style='color: #555555;'&gt; 6&lt;/span&gt; (7.532869 51.95257)
+&lt;span style='color: #555555;'&gt; 7&lt;/span&gt; (7.540063 51.94468)
+&lt;span style='color: #555555;'&gt; 8&lt;/span&gt;  (7.53822 51.94546)
+&lt;span style='color: #555555;'&gt; 9&lt;/span&gt;  (7.537673 51.9475)
+&lt;span style='color: #555555;'&gt;10&lt;/span&gt; (7.537614 51.94562)
+&lt;span style='color: #555555;'&gt;# ... with 691 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
 ]
 
-&lt;style&gt;
-.panel1-toyexample2-user {
-  color: black;
-  width: 36.1052631578947%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-toyexample2-user {
-  color: black;
-  width: 61.8947368421053%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-toyexample2-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
+---
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
+
+```r
+roxel %&gt;% 
+  as_sfnetwork() %&gt;%
+  activate(edges) %&gt;%
+  st_geometry()
+```
+]
+
+.pull-right-60[
+
+```
+Geometry set for 851 features 
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax: 51.9612
+Geodetic CRS:  WGS 84
+First 5 geometries:
+```
+
+```
+LINESTRING (7.533722 51.95556, 7.533461 51.95576)
+```
+
+```
+LINESTRING (7.532442 51.95422, 7.53236 51.95377...
+```
+
+```
+LINESTRING (7.532709 51.95209, 7.532823 51.9523...
+```
+
+```
+LINESTRING (7.540063 51.94468, 7.539696 51.9447...
+```
+
+```
+LINESTRING (7.537673 51.9475, 7.537614 51.94562)
+```
+]
+
+---
+class: top, hide-logo
+
+## The sfnetwork class
+
+.pull-left-40[
+
+```r
+roxel %&gt;% 
+  as_sfnetwork() %&gt;%
+  st_transform(3035)
+```
+]
+
+.pull-right-60[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# A directed multigraph with 14 components with spatially explicit edges
+#
+# Node Data:     701 x 1 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+           geometry
+        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt; (4151370 3207673)
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt; (4151408 3207539)
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt; (4151421 3207592)
+&lt;span style='color: #555555;'&gt;# ... with 695 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Edge Data:     851 x 5&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
+#   3208565&lt;/span&gt;
+   from    to name         type                               geometry
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                      &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbecker~ reside~  (4151491 3207923, 4151474 3207946)
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersallee second~ (4151398 3207777, 4151390 3207727,~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-Ber~ reside~ (4151408 3207539, 4151417 3207573,~
+&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+class: top, hide-logo
+
+## Apply sf functions
+
+.pull-left-40[
+
+```r
+net = roxel %&gt;% 
+  as_sfnetwork() %&gt;%
+  st_transform(3035)
+
+plot(net)
+```
+]
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-34-1.png" width="864" /&gt;
+]
+
+---
+class: top, hide-logo
+
+## Apply sf functions
+
+.pull-left-40[
+
+```r
+plot(net)
+
+plot(
+  polygon, 
+  border = "red", 
+  lty = 4, 
+  lwd = 4, 
+  add = TRUE
+)
+```
+]
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-36-1.png" width="864" /&gt;
+]
+---
+class: top, hide-logo
+
+## Apply sf functions
+
+.pull-left-40[
+
+```r
+net %&gt;%
+  st_filter(polygon, .pred = st_intersects) %&gt;%
+  plot()
+```
+]
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-38-1.png" width="864" /&gt;
+]
 
 
 
+---
+class: top, hide-logo
 
+## Apply tidygraph functions
+
+.pull-left-40[
+
+```r
+net = as_sfnetwork(roxel) %&gt;%
+  activate(nodes) %&gt;%
+  mutate(betweenness = centrality_betweenness()) %&gt;%
+  activate(edges) %&gt;%
+  mutate(length = edge_length())
+
+net
+```
+]
+
+.pull-right-60[
+&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
+#
+# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
+#
+# A directed multigraph with 14 components with spatially explicit edges
+#
+# Edge Data:     851 x 6 (active)&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax:
+#   51.9612&lt;/span&gt;
+   from    to name     type                          geometry   length
+  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;    &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                 &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;      &lt;span style='color: #555555;'&gt;[m]&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbe~ resid~ (7.533722 51.95556, 7.533461 5~  28.859~
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pieners~ secon~ (7.532442 51.95422, 7.53236 51~ 107.704~
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte~ resid~ (7.532709 51.95209, 7.532823 5~  54.362~
+&lt;span style='color: #555555;'&gt;4&lt;/span&gt;     7     8 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;       path   (7.540063 51.94468, 7.539696 5~ 155.230~
+&lt;span style='color: #555555;'&gt;5&lt;/span&gt;     9    10 Welsing~ resid~ (7.537673 51.9475, 7.537614 51~ 208.663~
+&lt;span style='color: #555555;'&gt;6&lt;/span&gt;    11    12 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;       footw~ (7.543791 51.94733, 7.54369 51~  63.023~
+&lt;span style='color: #555555;'&gt;# ... with 845 more rows&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;#
+# Node Data:     701 x 2&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522622 ymin: 51.94151 xmax: 7.546705 ymax:
+#   51.9612&lt;/span&gt;
+             geometry betweenness
+          &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;dbl&amp;gt;&lt;/span&gt;
+&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (7.533722 51.95556)      &lt;span style='text-decoration: underline;'&gt;12&lt;/span&gt;936.
+&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (7.533461 51.95576)      &lt;span style='text-decoration: underline;'&gt;11&lt;/span&gt;824 
+&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (7.532442 51.95422)      &lt;span style='text-decoration: underline;'&gt;11&lt;/span&gt;926.
+&lt;span style='color: #555555;'&gt;# ... with 698 more rows&lt;/span&gt;
+&lt;/CODE&gt;&lt;/PRE&gt;
+]
+
+---
+class: top, hide-logo
+
+## Apply tidygraph functions
+
+.pull-left-40[
+
+```r
+ggplot() +
+  geom_sf(
+    data = st_as_sf(net, "edges"),
+    col = "grey50"
+  ) +
+  geom_sf(
+    data = st_as_sf(net, "nodes"),
+    aes(size = betweenness)
+  ) +
+  ggtitle("Betweenness centrality")
+```
+]
+
+.pull-right-60[
+&lt;img src="slides_files/figure-html/unnamed-chunk-42-1.png" width="864" /&gt;
+]
 
 ---
 class: center, middle
@@ -401,10 +894,6 @@ class: middle
 
 &lt;img src="slides_files/figure-html/clean2-1.png" width="864" /&gt;
 
-.note[
-Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
-]
-
 ---
 class: middle
 ### Network pre-processing and cleaning
@@ -412,12 +901,6 @@ class: middle
 #### Simplifying edges
 
 &lt;img src="slides_files/figure-html/clean3-1.png" width="864" /&gt;
-
-
-
-.note[
-Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
-]
 
 ---
 class: middle
@@ -427,12 +910,6 @@ class: middle
 
 &lt;img src="slides_files/figure-html/clean4-1.png" width="864" /&gt;
 
-
-
-.note[
-Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
-]
-
 ---
 class: middle
 ### Network pre-processing and cleaning
@@ -440,12 +917,6 @@ class: middle
 #### Removing pseudo-nodes
 
 &lt;img src="slides_files/figure-html/clean5-1.png" width="864" /&gt;
-
-
-
-.note[
-Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
-]
 
 ---
 class: middle
@@ -457,94 +928,37 @@ class: middle
 
 &lt;img src="slides_files/figure-html/clean6-1.png" width="864" /&gt;
 
-
-
-.note[
-Check the [code and docs for network cleaning and pre-processing here.](https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html)
-]
-
 ---
 class: center, middle
 
 ### What can we do?
 
-#### Spatial joins and filters
+#### Snapping
 
 ---
 class: middle
 
 count: false
-### Spatial joins and filters 
- #### Using st_filter()
-&lt;img src="slides_files/figure-html/stfilter_user_01_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial joins and filters 
- #### Using st_filter()
-&lt;img src="slides_files/figure-html/stfilter_user_02_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial joins and filters 
- #### Using st_filter()
-&lt;img src="slides_files/figure-html/stfilter_user_03_output-1.png" width="864" /&gt;
-
-&lt;style&gt;
-.panel1-stfilter-user {
-  color: black;
-  width: 99%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-stfilter-user {
-  color: black;
-  width: NA%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-stfilter-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
-
----
-class: middle
-
-count: false
-### Spatial joins and filters 
- #### Snapping points to their nearest node before joining
+### Snapping 
+ #### Snapping points to their nearest node
 &lt;img src="slides_files/figure-html/snap_user_01_output-1.png" width="864" /&gt;
 
 ---
 count: false
-### Spatial joins and filters 
- #### Snapping points to their nearest node before joining
+### Snapping 
+ #### Snapping points to their nearest node
 &lt;img src="slides_files/figure-html/snap_user_02_output-1.png" width="864" /&gt;
 
 ---
 count: false
-### Spatial joins and filters 
- #### Snapping points to their nearest node before joining
+### Snapping 
+ #### Snapping points to their nearest node
 &lt;img src="slides_files/figure-html/snap_user_03_output-1.png" width="864" /&gt;
 
 ---
 count: false
-### Spatial joins and filters 
- #### Snapping points to their nearest node before joining
+### Snapping 
+ #### Snapping points to their nearest node
 &lt;img src="slides_files/figure-html/snap_user_04_output-1.png" width="864" /&gt;
 
 &lt;style&gt;
@@ -582,19 +996,19 @@ count: false
 class: middle
 
 count: false
-### Spatial joins and filters 
+### Snapping 
  #### Blending points into a network
 &lt;img src="slides_files/figure-html/blend_user_01_output-1.png" width="864" /&gt;
 
 ---
 count: false
-### Spatial joins and filters 
+### Snapping 
  #### Blending points into a network
 &lt;img src="slides_files/figure-html/blend_user_02_output-1.png" width="864" /&gt;
 
 ---
 count: false
-### Spatial joins and filters 
+### Snapping 
  #### Blending points into a network
 &lt;img src="slides_files/figure-html/blend_user_03_output-1.png" width="864" /&gt;
 
@@ -635,375 +1049,6 @@ class: center, middle
 ### What can we do?
 
 #### Routing
-
----
-class: top
-
-count: false
- 
-### Routing 
- #### Setting edge weights
-.panel1-weights-user[
-
-```r
-*as_sfnetwork(
-* roxel,
-* directed = FALSE
-* )
-```
-]
- 
-.panel2-weights-user[
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
-#
-# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:4326&lt;/span&gt; &lt;span style='color: #555555;'&gt;
-#
-# An undirected multigraph with 14 components with spatially explicit edges
-#
-# Node Data:     701 x 1 (active)&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522622 ymin: 51.94151 xmax: 7.546705 ymax:
-#   51.9612&lt;/span&gt;
-             geometry
-          &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [°]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (7.533722 51.95556)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (7.533461 51.95576)
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (7.532442 51.95422)
-&lt;span style='color: #555555;'&gt;4&lt;/span&gt;  (7.53209 51.95328)
-&lt;span style='color: #555555;'&gt;5&lt;/span&gt; (7.532709 51.95209)
-&lt;span style='color: #555555;'&gt;6&lt;/span&gt; (7.532869 51.95257)
-&lt;span style='color: #555555;'&gt;# ... with 695 more rows&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;#
-# Edge Data:     851 x 5&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 7.522594 ymin: 51.94151 xmax: 7.546705 ymax:
-#   51.9612&lt;/span&gt;
-   from    to name        type                                geometry
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                       &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [°]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbecke~ reside~ (7.533722 51.95556, 7.533461 51.955~
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersall~ second~ (7.532442 51.95422, 7.53236 51.9537~
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-Be~ reside~ (7.532709 51.95209, 7.532823 51.952~
-&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
-&lt;/CODE&gt;&lt;/PRE&gt;
-]
-
----
-count: false
- 
-### Routing 
- #### Setting edge weights
-.panel1-weights-user[
-
-```r
-as_sfnetwork(
-  roxel,
-  directed = FALSE
-  ) %&gt;%
-* st_transform(3035)
-```
-]
- 
-.panel2-weights-user[
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
-#
-# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
-#
-# An undirected multigraph with 14 components with spatially explicit edges
-#
-# Node Data:     701 x 1 (active)&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
-#   3208565&lt;/span&gt;
-           geometry
-        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
-&lt;span style='color: #555555;'&gt;4&lt;/span&gt; (4151370 3207673)
-&lt;span style='color: #555555;'&gt;5&lt;/span&gt; (4151408 3207539)
-&lt;span style='color: #555555;'&gt;6&lt;/span&gt; (4151421 3207592)
-&lt;span style='color: #555555;'&gt;# ... with 695 more rows&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;#
-# Edge Data:     851 x 5&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
-#   3208565&lt;/span&gt;
-   from    to name         type                               geometry
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                      &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbecker~ reside~  (4151491 3207923, 4151474 3207946)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersallee second~ (4151398 3207777, 4151390 3207727,~
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-Ber~ reside~ (4151408 3207539, 4151417 3207573,~
-&lt;span style='color: #555555;'&gt;# ... with 848 more rows&lt;/span&gt;
-&lt;/CODE&gt;&lt;/PRE&gt;
-]
-
----
-count: false
- 
-### Routing 
- #### Setting edge weights
-.panel1-weights-user[
-
-```r
-as_sfnetwork(
-  roxel,
-  directed = FALSE
-  ) %&gt;%
-  st_transform(3035) %&gt;%
-* activate("edges")
-```
-]
- 
-.panel2-weights-user[
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
-#
-# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
-#
-# An undirected multigraph with 14 components with spatially explicit edges
-#
-# Edge Data:     851 x 5 (active)&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
-#   3208565&lt;/span&gt;
-   from    to name       type                                 geometry
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;      &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbeck~ reside~    (4151491 3207923, 4151474 3207946)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pienersal~ second~ (4151398 3207777, 4151390 3207727, 4~
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte-B~ reside~ (4151408 3207539, 4151417 3207573, 4~
-&lt;span style='color: #555555;'&gt;4&lt;/span&gt;     7     8 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;         path    (4151885 3206698, 4151861 3206711, 4~
-&lt;span style='color: #555555;'&gt;5&lt;/span&gt;     9    10 Welsinghe~ reside~    (4151732 3207017, 4151721 3206809)
-&lt;span style='color: #555555;'&gt;6&lt;/span&gt;    11    12 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;         footway (4152152 3206984, 4152143 3206932, 4~
-&lt;span style='color: #555555;'&gt;# ... with 845 more rows&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;#
-# Node Data:     701 x 1&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
-#   3208565&lt;/span&gt;
-           geometry
-        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
-&lt;span style='color: #555555;'&gt;# ... with 698 more rows&lt;/span&gt;
-&lt;/CODE&gt;&lt;/PRE&gt;
-]
-
----
-count: false
- 
-### Routing 
- #### Setting edge weights
-.panel1-weights-user[
-
-```r
-as_sfnetwork(
-  roxel,
-  directed = FALSE
-  ) %&gt;%
-  st_transform(3035) %&gt;%
-  activate("edges") %&gt;%
-* mutate(weight = edge_length())
-```
-]
- 
-.panel2-weights-user[
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A sfnetwork with&lt;/span&gt; &lt;span style='color: #555555;'&gt;701&lt;/span&gt; &lt;span style='color: #555555;'&gt;nodes and&lt;/span&gt; &lt;span style='color: #555555;'&gt;851&lt;/span&gt; &lt;span style='color: #555555;'&gt;edges
-#
-# CRS: &lt;/span&gt; &lt;span style='color: #555555;'&gt;EPSG:3035&lt;/span&gt; &lt;span style='color: #555555;'&gt;
-#
-# An undirected multigraph with 14 components with spatially explicit edges
-#
-# Edge Data:     851 x 6 (active)&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: LINESTRING&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
-#   3208565&lt;/span&gt;
-   from    to name     type                          geometry   weight
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;int&amp;gt;&lt;/span&gt; &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;chr&amp;gt;&lt;/span&gt;    &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;fct&amp;gt;&lt;/span&gt;                 &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;LINESTRING [m]&amp;gt;&lt;/span&gt;      &lt;span style='color: #555555;'&gt;[m]&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt;     1     2 Havixbe~ resid~ (4151491 3207923, 4151474 3207~  28.859~
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt;     3     4 Pieners~ secon~ (4151398 3207777, 4151390 3207~ 107.714~
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt;     5     6 Schulte~ resid~ (4151408 3207539, 4151417 3207~  54.367~
-&lt;span style='color: #555555;'&gt;4&lt;/span&gt;     7     8 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;       path   (4151885 3206698, 4151861 3206~ 155.223~
-&lt;span style='color: #555555;'&gt;5&lt;/span&gt;     9    10 Welsing~ resid~ (4151732 3207017, 4151721 3206~ 208.682~
-&lt;span style='color: #555555;'&gt;6&lt;/span&gt;    11    12 &lt;span style='color: #BB0000;'&gt;NA&lt;/span&gt;       footw~ (4152152 3206984, 4152143 3206~  63.028~
-&lt;span style='color: #555555;'&gt;# ... with 845 more rows&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;#
-# Node Data:     701 x 1&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Geometry type: POINT&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Dimension:     XY&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;# Bounding box:  xmin: 4150707 ymin: 3206375 xmax: 4152367 ymax:
-#   3208565&lt;/span&gt;
-           geometry
-        &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;POINT [m]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; (4151491 3207923)
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; (4151474 3207946)
-&lt;span style='color: #555555;'&gt;3&lt;/span&gt; (4151398 3207777)
-&lt;span style='color: #555555;'&gt;# ... with 698 more rows&lt;/span&gt;
-&lt;/CODE&gt;&lt;/PRE&gt;
-]
-
----
-count: false
- 
-### Routing 
- #### Setting edge weights
-.panel1-weights-user[
-
-```r
-as_sfnetwork(
-  roxel,
-  directed = FALSE
-  ) %&gt;%
-  st_transform(3035) %&gt;%
-  activate("edges") %&gt;%
-  mutate(weight = edge_length()) -&gt;
-* net
-```
-]
- 
-.panel2-weights-user[
-
-]
-
-&lt;style&gt;
-.panel1-weights-user {
-  color: black;
-  width: 99%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-weights-user {
-  color: black;
-  width: NA%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-weights-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
-
-.note[
-Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
-]
-
----
-class: top
-
-count: false
- 
-### Routing 
- #### Calculating shortest paths
-.panel1-shortpath-user[
-
-```r
-*paths = st_network_paths(
-* net,
-* from = 495,
-* to = c(458, 121)
-*) 
-*paths
-```
-]
- 
-.panel2-shortpath-user[
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tibble: 2 x 2&lt;/span&gt;
-  node_paths edge_paths
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;     &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;    
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [29]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [28]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [33]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [32]&amp;gt;&lt;/span&gt;
-&lt;/CODE&gt;&lt;/PRE&gt;
-]
-
----
-count: false
- 
-### Routing 
- #### Calculating shortest paths
-.panel1-shortpath-user[
-
-```r
-paths = st_network_paths(
-  net,
-  from = 495,
-  to = c(458, 121)
-)
-paths
-
-*paths %&gt;%
-* slice(1) %&gt;%
-* pull(node_paths) %&gt;%
-* unlist()
-```
-]
- 
-.panel2-shortpath-user[
-&lt;PRE class="fansi fansi-output"&gt;&lt;CODE&gt;&lt;span style='color: #555555;'&gt;# A tibble: 2 x 2&lt;/span&gt;
-  node_paths edge_paths
-  &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;     &lt;span style='color: #555555; font-style: italic;'&gt;&amp;lt;list&amp;gt;&lt;/span&gt;    
-&lt;span style='color: #555555;'&gt;1&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [29]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [28]&amp;gt;&lt;/span&gt;
-&lt;span style='color: #555555;'&gt;2&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [33]&amp;gt;&lt;/span&gt; &lt;span style='color: #555555;'&gt;&amp;lt;int [32]&amp;gt;&lt;/span&gt;
-&lt;/CODE&gt;&lt;/PRE&gt;
-
-```
- [1] 495 485 244 402 166  18 195 181  68 100 169 170 182 101 103 547
-[17] 546 554 556 555  86  61  88 531 543  90 229 527 458
-```
-]
-
-&lt;style&gt;
-.panel1-shortpath-user {
-  color: black;
-  width: 99%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-shortpath-user {
-  color: black;
-  width: NA%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-shortpath-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
-
-.note[
-Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
-]
 
 ---
 class: top
@@ -1074,69 +1119,20 @@ count: false
 
 
 
-.note[
-Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
-]
-
 ---
 class: top
 
-count: false
- 
 ### Routing 
- #### Retrieving an OD cost matrix
-.panel1-costmatrix-user[
+
+#### Retrieving an OD cost matrix
+
 
 ```r
-*p1
-```
-]
- 
-.panel2-costmatrix-user[
-
-```
-Geometry set for 1 feature 
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: 4151376 ymin: 3206671 xmax: 4151376 ymax: 3206671
-Projected CRS: ETRS89-extended / LAEA Europe
-```
-
-```
-POINT (4151376 3206671)
-```
-]
-
----
-count: false
- 
-### Routing 
- #### Retrieving an OD cost matrix
-.panel1-costmatrix-user[
-
-```r
-p1
-
-*st_network_cost(
-* net,
-* from = c(p1, p2, p3),
-* to = c(p1, p2, p3)
-*) 
-```
-]
- 
-.panel2-costmatrix-user[
-
-```
-Geometry set for 1 feature 
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: 4151376 ymin: 3206671 xmax: 4151376 ymax: 3206671
-Projected CRS: ETRS89-extended / LAEA Europe
-```
-
-```
-POINT (4151376 3206671)
+st_network_cost(
+  net, 
+  from = c(p1, p2, p3),
+  to = c(p1, p2, p3)
+)
 ```
 
 ```
@@ -1145,189 +1141,13 @@ POINT (4151376 3206671)
 [2,] 1614.252    0.000 1315.965
 [3,] 2094.555 1315.965    0.000
 ```
-]
-
-&lt;style&gt;
-.panel1-costmatrix-user {
-  color: black;
-  width: 99%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-costmatrix-user {
-  color: black;
-  width: NA%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-costmatrix-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
-
-.note[Check [routing applications with sfnetworks here.](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#applications-1)
-]
 
 ---
 class: center, middle
 
-### What can we do?
+### What more?
 
-#### Spatial morphers
-
----
-class: middle
-
-### What is morphing?
-
-Morphing networks is a functionality that has its roots in tidygraph. 
-
---
-
-It allows you to:
-
-1. temporarily change the topology of the original network with the `tidygraph::morph()` verb,
-
-2. perform some actions on this “morphed state” of the network using dplyr verbs, 
-
-3. and finally merge the changes back into the original network with the `tidygraph::unmorph()` verb.
-
---
-
-Morphing is meant to make temporary changes to your network.
-
----
-class: middle
-
-### What about permanent changes?
-
-The same morpher functions that are used for temporary conversions during morphing can be used for lasting conversions when you provide them to the `tidygraph::convert()` verb instead.
-
----
-class: middle
-
-### What type of **spatial** topology changes can be done?
-
----
-class: top
-
-count: false
-### Spatial morphers 
- #### to_spatial_contracted()
-&lt;img src="slides_files/figure-html/contracted_user_01_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial morphers 
- #### to_spatial_contracted()
-&lt;img src="slides_files/figure-html/contracted_user_02_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial morphers 
- #### to_spatial_contracted()
-&lt;img src="slides_files/figure-html/contracted_user_03_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial morphers 
- #### to_spatial_contracted()
-&lt;img src="slides_files/figure-html/contracted_user_04_output-1.png" width="864" /&gt;
-
-&lt;style&gt;
-.panel1-contracted-user {
-  color: black;
-  width: 99%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-contracted-user {
-  color: black;
-  width: NA%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-contracted-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
-
----
-class: middle
-
-count: false
-### Spatial morphers 
- #### to_spatial_neighborhood()
-&lt;img src="slides_files/figure-html/neigh_user_01_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial morphers 
- #### to_spatial_neighborhood()
-&lt;img src="slides_files/figure-html/neigh_user_02_output-1.png" width="864" /&gt;
-
----
-count: false
-### Spatial morphers 
- #### to_spatial_neighborhood()
-&lt;img src="slides_files/figure-html/neigh_user_03_output-1.png" width="864" /&gt;
-
-&lt;style&gt;
-.panel1-neigh-user {
-  color: black;
-  width: 99%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel2-neigh-user {
-  color: black;
-  width: NA%;
-  hight: 32%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-.panel3-neigh-user {
-  color: black;
-  width: NA%;
-  hight: 33%;
-  float: left;
-  padding-left: 1%;
-  font-size: 80%
-}
-&lt;/style&gt;
-
-
-
-
+#### Much more...!
 
 ---
 class: center, middle
